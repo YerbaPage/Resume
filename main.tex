@@ -12,7 +12,6 @@
     \hrulefill
 \end{center}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % OBJECTIVE
 % Who you are, what domain, what are you looking for and when?
@@ -38,10 +37,10 @@
 \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
     \item {Undergraduate in Applied Mathematics, GPA in the past year: \textbf{3.72/4(88.9/100)},
           Courses on AI taken with current seniors: Natural Language Processing (4.0), Deeping Learning (4.0), Machine Learning (3.7).}
-    \item {Awards: People's Scholarship, Outperforming Individual Scholarship (2/86), Featured Student (2/86).}
-    \item {Solid expertise in: Python (Deep Learning, Scientific Computing), MATLAB, Bash, \LaTeX, Git; experienced in: C, C\texttt{++}, CMake, Javascript, SQL, SPSS.}
+    \item {Scholarships: People's Scholarship, Outperforming Individual Scholarship \textbf{(2/86)}, Featured Student \textbf{(2/86)}.}
+    \item {Solid expertise in: Python (Deep Learning, Scientific Computing), MATLAB, Bash, \LaTeX, Git; experienced in: C, C\texttt{++}, CMake, CUDA, Javascript, SQL, SPSS.\\}
           % FORTAN CUDA maybe
-    \item {Team working: President of school table tennis club, caption of school table tennis team, \\}
+    % \item {Team working: Caption of school table tennis team, president of school table tennis club.\\}
           % \item {Solid expertise in: Python (Pytorch, Tensorflow, FEM), MATLAB, Bash, \LaTeX, Git; experienced in: C, C\texttt{++}, CMake, Javascript, SQL, SPSS\\} % FORTAN CUDA maybe
 \end{itemize}
 
@@ -64,7 +63,7 @@
 
 \noindent \textbf{\underline{PUBLICATIONS}} \\
 \noindent [1] Xuehai Huang, \textbf{Yuling Shi}, Wenqing Wang:
-A Morley-Wang-Xu element method for a fourth order elliptic singular perturbation problem. (\textit{accepted by Journal of Scientific Computing}) \\ % arXiv:2011.14064
+A Morley-Wang-Xu element method for a fourth order elliptic singular perturbation problem. (\textit{Journal of Scientific Computing}, accepted) \\ % arXiv:2011.14064
 
 % \noindent \textbf{Company name} \hfill City Name, State \\
 % \textit{Role name} \hfill Month, Year $-$ Month, Year
@@ -92,28 +91,31 @@ A Morley-Wang-Xu element method for a fourth order elliptic singular perturbatio
 % Can also include personal projects, competitions, contribution to Open source.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent \textbf{\underline{RESEARCH EXPERIENCE}} \\
-\noindent \textbf{Research Assistant, Finite Element Method} \hfill Shanghai, China
+\noindent \textbf{Research Assistant, Robust Finite Element Method for a Singular Perturbation Problem} \hfill Shanghai, China
 \\ \textit{Advisor: Prof. Xuehai Huang} \hfill Jul 2020 - Present
 \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-    \item {Studied scientific computing package skfem in Python and iFEM in MATLAB for finite element method.}
-    \item {}
-    \item {Contributed codes and reported bug for an open source package scikit-fem when implementing experiments.}
-    \item { accepted by Journal of Scientific Computing. \\}
+    \item {Studied scientific computing packages scikit-fem in Python and iFEM in MATLAB for finite element method. Contributed codes and reported bug for scikit-fem.}
+    \item {Implemented a robust AMG-CG solver with preconditioner. Achieved optimal convergence rate with Nitche's technique in the case of the boundary
+    layers.}
+    \item {Discovered and analyzed the super-convergence benefit from a simply modified right hand side.}
+    % \item {Contributed codes and reported bug for the open source package scikit-fem when implementing experiments.}
+    % \item {Analyzed and summarized experiment results in paper: A Morley-Wang-Xu element method for a fourth order elliptic singular perturbation problem (accepted by \textit{Journal of Scientific Computing}). \\}
+    \item {Final paper has been accepted by \textit{Journal of Scientific Computing}. \\}
 \end{itemize}
 
 \noindent \textbf{Research Assistant, Interpreting Predictions of NLP Models} \hfill Shanghai, China
 \\ \textit{Advisor: Dr. Wanyun Cui} \hfill  Jan 2021 - Present
 \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-    \item {Developed XYZ using XYZ that led to X\% improvement.}
-    \item {Led an initiative XYZ to identify the root cause.}
-    \item {Collaborated with XYZ team to work on XYZ feature. \\}
+    \item {Studied recent conference tutorials and papers on interpretation techniques.} % like SHAP, LIME and integrated gradient.}
+    \item {Analyzed changes in gradients of important words during the training process in Pytorch.}
+    \item {Researched on interpreting how the model learned relations between words from the aspect of Taylor expansion.\\}
 \end{itemize}
 
 \noindent \textbf{Project Leader, Building Knowledge Graph with Deep Learning Models}  \hfill Shanghai, China
-\\ \textit{Advisor: Prof. Xuehai Huang} \hfill  Feb 2020 - Jun 2020
+\\ \textit{Advisor: Prof. Xuehai Huang} \hfill  Jul 2020 - Dec 2020
 \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
     \item {Applied NLP models to build a financial knowledge graph, studied models for named entity recognition, relation extraction and event extraction.}
-    \item {Collected data with Scarpy, stored the data in Neo4j graph database and wrapped it up with Flask framework.}
+    \item {Collected data with Scarpy, stored the data in Neo4j graph database and wrapped them up with Flask framework.}
     \item {Added labels to original sentences and included a BiGRU layer after BERT to improve the performance in named entity recognition task, implemented with Pytorch.}
     \item {Awarded as "Excellent Project" in school and selected for oral presentation \textbf{(3/165)}.\\}
 \end{itemize}
@@ -121,9 +123,9 @@ A Morley-Wang-Xu element method for a fourth order elliptic singular perturbatio
 \noindent \textbf{Project Leader, Kaggle Question Answering Competition} \hfill Shanghai, China
 \\ \textit{Advisor: Ass.Prof. Hui Fang} \hfill Feb 2020 - Jun 2020
 \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-    \item {Ensembled models and improved training process learning from latest deep learning research papers to improve BERT and similar models in question answering task.}
+    \item {Ensembled models and improved training process by studying research papers to improve performance of BERT and similar models in question answering task.}
     \item {Outperformed the best submission in Kaggle leaderboard with smaller models. Implemented technics in Pytorch including: pre-training on similar dataset, hard negative mining, adding special token, mixed precision training.}
-    \item {Reached a final GPA of 4.0 as a second year student among juniors from experimental class in Department of Electrical Engineering.\\}
+    \item {Reached a final GPA of 4.0 in second year among juniors from experimental class in Department of Electrical Engineering.\\}
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -131,19 +133,20 @@ A Morley-Wang-Xu element method for a fourth order elliptic singular perturbatio
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \noindent \textbf{\underline{ACITIVTIES AND HONORS}} \\
 \noindent \textbf{$1^{st}$ Prize in Mathematical Contest in Modeling of SUFE (Ranked 2/70)} \hfill Apr 2020 $-$ Apr 2020
-\begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-    \item {Adopted machine learning and optimization models to analyze effects and duration of online courses.\\}
-\end{itemize}
+% \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
+%     \item {Adopted machine learning and optimization models to analyze effects and duration of online courses.\\}
+% \end{itemize}
 
-\noindent \textbf{President of School Table Tennis Club (300\texttt{+} members)} \hfill Sept 2019 $-$ Aug 2020
-\begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-    \item {Held competitions within and between schools, led outing activities and managed regular activities of the club.\\}
-\end{itemize}
+\noindent \textbf{President of School Table Tennis Club (with 300\texttt{+} members)} \hfill Sept 2019 $-$ Aug 2020
+% \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
+%     \item {Held competitions within and between schools, led outing activities and managed regular activities of the club.\\}
+% \end{itemize}
 
-\noindent \textbf{$1^{st}$ Prize in National Olympiad in Physics (Jiangxi Area, top 0.01\%)} \hfill Sept 2016 $-$ Sept 2017
-\begin{itemize}[noitemsep,nolistsep,leftmargin=*]
-    \item {Self-studied undergraduate and graduate courses in Physics during high-school with strong motivation and ability to learn.\\}
-\end{itemize}
+\noindent \textbf{$1^{st}$ Prize in National Olympiad in Physics (Provincial Area, top 0.01\%)} \hfill Sept 2016 $-$ Sept 2017 \\
+% \begin{itemize}[noitemsep,nolistsep,leftmargin=*]
+%     % \item {Self-studied undergraduate and graduate courses in Physics during high-school with strong motivation and ability to learn.\\}
+%     \item {Self-studied undergraduate and graduate courses in Physics, able to solve problems with strong Physics backgrounds.\\}
+% \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Other Skills: you can add all your other skills here.
@@ -152,6 +155,6 @@ A Morley-Wang-Xu element method for a fourth order elliptic singular perturbatio
 \noindent \textbf{\underline{OTHER SKILLS}} \\
 \noindent \textbf{Language:} English (TOFEL 102), Chinese (mother language) \\
 % \noindent \textbf{Programming projects:}  \\
-\noindent \textbf{Interests:} Table tennis ($5^{th}$ place in Shanghai Championship Doubles, $3^{rd}$ place in Teams)\\
+\noindent \textbf{Interests that make me optimistic:} Table tennis ($5^{th}$ place in Shanghai Doubles Championship, $3^{rd}$ place in Teams)\\
 
 \end{document}
