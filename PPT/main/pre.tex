@@ -1,0 +1,702 @@
+% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice.
+
+\documentclass{beamer}
+\usepackage{latexsym,amsmath,xcolor,multicol,booktabs,calligra}
+% There are many different themes available for Beamer. A comprehensive
+% list with examples is given here:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+% You can uncomment the themes below if you would like to use a different
+% one:
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{boxes}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{default}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+\title{A Brief Introduction of My Research}
+
+% A subtitle is optional and this may be deleted
+
+\author{Yuling Shi}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute{SUFE} % (optional, but mostly needed)
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date{\today}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+\subject{Theoretical Computer Science}
+% This is only inserted into the PDF information catalog. Can be left
+% out.
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+% Let's get started
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Contents}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+\section{Background and motivation}
+
+\begin{frame}{Background}
+  \begin{block}{Background}
+  \begin{itemize}
+      \item Open-domain question answering (QA) is a benchmark task in natural language understanding, which has significant utility to users, and a challenge task that can drive the development of methods for natural language understanding.
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Background}
+\begin{itemize}
+    \item When we enter a question to the search engine.
+\end{itemize}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/google_search.png}
+	\caption{Searching with Google}
+    \end{figure}
+\end{frame}
+\begin{frame}{Background}
+\begin{itemize}
+    \item Google will provide a paragraph to some questions.
+\end{itemize}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/result.png}
+	\caption{Getting your result from search engine \label{qs}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Background}
+\begin{itemize}
+    \item Sometimes a short answer if there exists.
+\end{itemize}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/google_short.png}
+	\caption{Getting your result from search engine \label{qs}}
+    \end{figure}
+\end{frame}
+
+% \begin{frame}{Background}
+%     \begin{figure}[htbp]
+% 	\centering
+% 	\includegraphics[width=0.8\textwidth]{fig/bing_result.png}
+% 	\caption{Getting your result from search engine \label{qs}}
+%     \end{figure}
+% \end{frame}
+
+\begin{frame}{Motivation}
+  \begin{block}{Motivation}
+  \begin{enumerate}
+      \item  Our project is dealing with the problem of selecting short (several words) and long (entire sentence) answers responding to \textbf{real questions} about Wikipedia articles.
+      \item Building a robust quastion answering system can emulate how people look for information by reading the web to return answers to common questions and can improve the performance of serach engines. 
+  \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Motivation}
+  \begin{block}{Motivation}
+  \begin{itemize}
+      \item Popular QA benchmarks like SQuAD (\textbf{Rajpurkar et al., 2016}) have driven impressive progress on the task of identifying answers responding to questions.
+      \item Recent models using BERT pretraining (\textbf{Devlin et al., 2019}) have already surpassed human performance on SQuAD.
+  \end{itemize}
+     \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.5\textwidth]{fig/bertoverhuman.png}
+	\caption{BERT performance on SQuAD \label{lianxu}}
+	\end{figure}
+  \end{block}
+  
+\end{frame}
+
+\section{Data description}
+
+\begin{frame}{Data description}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.5\textwidth]{fig/aa.png}
+	\caption{Example annotations from the corpus \label{lianxu}}
+    \end{figure}
+  \begin{block}{Data description}
+  \begin{itemize}
+      \item The Natural Questions (NQ) (\textbf{Kwiatkowski et al., 2019}) is a question answering dataset from Google AI.
+      \item Each example is comprised of a google.com query and a corresponding Wikipedia page. 
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Data description}
+
+  \begin{block}{Less observational bias}
+  \begin{itemize}
+      \item Other datasets like SQuAD, SQuAD 2.0 and NarrativeQA  contain questions and answers written by annotators \textbf{who have first read a short text containing the answer}
+      \item NQ collects \textbf{real questions} issued to the Google search engine which prevents it from observational bias.
+  \end{itemize}
+  \end{block}
+    \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.4\textwidth]{fig/qs.png}
+    \caption{The number of questions and candidates in SQuAD and Natural Questions(NQ) datasets \label{qs}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Data description}
+  \begin{block}{More challenging}
+  \begin{itemize}
+      \item As real questions issued to the google engine, questions in NQ also have more equally distributed types.
+  \end{itemize}
+%  Nearly half (47.7\%) of SQuAD questions are what questions, with the next most frequent being who (9.6\%) and how (9.3\%). NQ is more balanced across question types, with the leading types being who (32.6\%), when (20.3\%) and what (15.3\%).
+  \end{block}
+ \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.5\textwidth]{fig/type.png}
+	\caption{The distribution of question types in SQuAD and NQ. \label{type}}
+\end{figure}
+\end{frame}
+% \begin{frame}{Data description}
+%   \begin{block}{Data description}
+% For real questions in the NQ dataset, \textbf{only 35\% of them have both short and long answers}. The long and the short answer annotations can however be empty. If they are both empty, then there is \textbf{no answer}(37\%) on the page at all. If the long answer annotation is non-empty, but the short answer annotation is empty, then the annotated passage answers the question but \textbf{no explicit short answer} could be found(13\%). Finally 1\% of the documents have a passage annotated with a short answer that is \textbf{“yes” or “no”}, instead of a list of short spans. 
+%   \end{block}
+% \end{frame}
+
+\begin{frame}{Data description}
+  \begin{block}{More challenging}
+    \begin{itemize}
+        \item For real questions in the NQ dataset, \textbf{only 35\% of them have both short and long answers}. 
+    \end{itemize}
+    \end{block}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.4\textwidth]{fig/1.png}
+    \caption{Answer distribution}
+    \label{fig:my_label}
+\end{figure} 
+\end{frame}
+
+\begin{frame}{Question: Where is the world's largest ice sheet located? }
+\begin{block}{Long answer}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{fig/question2_long.png}
+    % \caption{Answer distribution}
+    \label{fig:my_label}
+\end{figure}
+\end{block}
+\end{frame}
+
+\begin{frame}{Question: Where is the world's largest ice sheet located? }
+\begin{block}{Short answer}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{fig/question2_short.png}
+    % \caption{Answer distribution}
+    \label{fig:my_label}
+\end{figure}    
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Question: Who is the author of the book Arabian Nights? }
+\begin{block}{Long answer}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{fig/question1.png}
+    % \caption{Answer distribution}
+    \label{fig:my_label}
+\end{figure}    
+\end{block}
+\begin{block}{Short answer}
+None
+\end{block}
+\end{frame}
+%   \begin{block}{Data description}
+% In the original SQuAD 1.1 dataset, \textbf{each question has an answer} and annotators often borrow part of the evidence paragraph to create a question. Jia and Liang (2017) showed that systems trained on SQuAD could be easily fooled by the insertion of distractor sentences that should not change the answer. In order to improve the dataset, 53,775 new(42.3\% of total), unanswerable questions are added to the SQuAD 2.0, which however \textbf{included more observational bias}. By contrast, only 35\% of the real natural questions in the NQ dataset originally have a short answer and 13\% of questions only have long answer, multiple decisions makes it more challenging to predict.
+%   \end{block}
+
+\section{Background-related reading}
+\begin{frame}{Background-related reading}
+  \begin{block}{Background-related reading}
+     \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.5\textwidth]{fig/leaderboard.png}
+	\caption{SQuAD 2.0 Leaderboard \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame} 
+
+\begin{frame}{Background-related reading}
+  \begin{block}{Background-related reading}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.8\textwidth]{fig/leaderboard_long.png}
+	\caption{long answer leaderboard \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Background-related reading}
+  \begin{block}{Background-related reading}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.8\textwidth]{fig/leaderboard_short.png}
+	\caption{short answer leaderboard  \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame}
+
+\section{Related work}
+
+\begin{frame}{Related work}
+  \begin{block}{The impact of different approaches on model performance}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.55\textwidth]{fig/prior_work.png}
+	\caption{prior work  \label{type}}
+	\end{figure}
+
+  \end{block}
+\end{frame}
+
+\begin{frame}{Related work}
+  \begin{block}{The impact of different approaches on model performance}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.8\textwidth]{fig/Bert-QA-performance.png}
+	\caption{ Short \& long answer F1 performance of BERT-for-QA models on NQ dev. We abbreviate pre-training with PT  \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Related work}
+  \begin{block}{The impact of different approaches on model performance}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.8\textwidth]{fig/sub_sampling.png}
+	\caption{Performance on NQ dev using a preliminary BERT $_{\text {BASE }}$ -for-QA model with varying sub-sampling \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Related work}
+  \begin{block}{The impact of different approaches on model performance}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.8\textwidth]{fig/NQ_ensemble_performance.png}
+	\caption{Ensemble performance on NQ dev-test \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Related work}
+  \begin{block}{The impact of different approaches on model performance}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.8\textwidth]{fig/duplicate_answer_spans.png}
+	\caption{Performance on $\mathrm{NQ}$ dev-test for varying aggregation strategies for duplicate answer spans (using greedy long answer search) \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame}
+
+
+% \begin{frame}{F1 score}
+%   \begin{block}{F1 score}
+% \begin{equation}
+%     F_{1}=2 \cdot \frac{ { precision } \cdot  { recall }}{ { precision }+ { recall }}
+% \end{equation}
+% where
+% \begin{equation}
+%     precision=\frac{T P}{T P+F P},   recall=\frac{T P}{T P+F N}
+% \end{equation}
+% F1 metric is applied per instance and measures the overlap between the prediction a’ and the ground truth a, which are treated as bags of words.
+%   \end{block}
+% \end{frame}
+
+\section{Our work}
+\subsection{Pre-processing}
+\begin{frame}{Pre-processing}
+ \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.3\textwidth]{fig/tokens.png}
+	\caption{HTML tags and answer distribution}
+    \end{figure}
+    \begin{block}{New Tokens}
+        According to the baseline paper, we added html tags as new tokens for better model performance. All the 9 tags from the Data Statistics Section of https://github.com/google-research-datasets/natural-questions was added. For html tags that are not in the 9 added tokens, we replaced them with a unique token in the tokenization dictionary or simply added another new token to represent them. 
+    \end{block}
+\end{frame}
+\subsection{Model Introduction}
+
+\begin{frame}{Model Introduction}
+  \begin{block}{Model Introduction}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=1\textwidth]{fig/model_compare.png}
+	\caption{BERT vs. ALBERT \label{type}}
+	\end{figure}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Model Introduction}
+  \begin{block}{Model Introduction}
+We utilized ALBERT and BERT models and pretrained them on SQuAD2.0 dataset to let them have some predicting ability. We used BERT-base model to firstly sift the candidates roughly and then using ALBERT-xlarge and BERT-large to choose the best candidates carefully. This kind of techniques can save lots of time and have a reasonable result which is easy for us to adjust and fine-tuning. At last, we ensembled model to let it be more robust.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Model Introduction}
+  \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=1\textwidth]{fig/model3.png}
+	\caption{model procedure\label{qs}}
+    \end{figure}
+\end{frame}
+
+\subsection{Innovation Points}
+
+\begin{frame}{Innovation Points}
+    \begin{block}{Innovation Points}
+        \begin{itemize}
+            \item Fintuning on SQuAD2.0
+            \item Mixed Precision Training
+            \item Hard Negative Sampling
+            \item Sifting candidates
+            \item Increase Empty Answer Ratio
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Fine-tuning on SQuAD $2.0$}
+
+\par SQuAD $2.0$ - $130,000$ crowd sourced question and answer training pairs derived from Wikipedia paragraphs.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{fig/squadquestions.png}
+    \caption{Questions without correct answer in SQuAD2.0.}
+    \label{fig:my_label}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Fine-tuning on SQuAD $2.0$}
+
+\begin{block}{Model after fine-tuning for 2 epochs (tested on SQuAD)}
+$$\begin{array}{cccc}
+\hline \text { Model Finetuned on SQuAD2.0 } & \text { EM } & \text { F1 } & \text{RunTime}\\
+\hline \text { ALBERT xlarge } & 84.94 & 87.97 & 8.4h \\
+\text { ALBERT xxlarge } & 86.57 & 89.56 &15.8 h\\
+\hline
+\end{array}$$
+\end{block}
+\end{frame}
+
+\begin{frame}{Fine-tuning on SQuAD $2.0$}
+\begin{block}{Performance in Our Training}
+$$\begin{array}{cccc}
+\hline \text { Model } & \text { Start\_acc } & \text { End\_acc } & \text { Class\_acc } \\
+\hline \text { BERT base (Original) } & 59.1 & 61.5 & 73.9 \\
+\text { ALBERT xlarge (Original) } & 0.12 & 0.13 & 66.67 \\
+\text { ALBERT xlarge (Finetuned) } & 82.54 & 86.37 & 85.75 \\
+\hline
+\end{array}$$
+\quad \tiny{batch size = 3 per GPU, learning rate = 1e-5 for 3 epochs}
+\end{block}
+\end{frame}
+
+\begin{frame}{Mixed Precision Training}
+\begin{itemize}
+    \item Save memory 
+    \item Speed up training process
+\end{itemize}
+\begin{block}{Description of FP32 and FP16}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{fig/fp.png}
+        % \caption{Description of FP32 and FP16 }
+        \label{fig:my_label}
+    \end{figure}
+\end{block}
+% \begin{block}{Performence}
+%     \begin{figure}
+%         \centering
+%         \includegraphics[width=0.8\textwidth]{fig/features.png}
+%         % \caption{Description of FP32 and FP16 }
+%         \label{fig:my_label}
+%     \end{figure}
+% \end{block}
+
+\end{frame}
+
+\begin{frame}{Mixed Precision Training}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{fig/mixpre.png}
+        \caption{Mixed precision training iteration for a layer.}
+        \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Mixed Precision Training}
+  \begin{block}{Experiment Result}
+  $$\begin{array}{cccc}
+    \hline \text { Precision} & \text { EM } & \text { F1 } & \text{Speed up${}^{*}$}\\
+    \hline \text { FP32 only } & 84.86 & 88.00 & 1.0\\
+    \text { FP16 Only } & 16.75 & 17.35 & 1.35\text{x} \\
+    \text { Mixed precision } & 84.94 & 87.97 &1.05\text{x} \\
+    \hline
+    \end{array}$$
+  \quad \tiny{$*$All tested during SQuAD2.0 fine-tuning }%and the speed will have more improvement on GPU with Tensor Cores}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Hard Negative Sampling}
+    \begin{block}{Intuition}
+    \begin{itemize}
+    \item Training questions without any short answer($65\%$) $\rightarrow$ Too many negative Examples
+    \item Uniform sampling $\rightarrow$ most of the negative candidates are \textbf{"too easy"}
+    \item Hard negative sampling $\rightarrow$ increase the difficulty of training % the candidate-level
+    \end{itemize}
+    \end{block}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{fig/hardnegativeegs.png}
+        \caption{Examples of easy negative examples in object detection}
+        \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Hard Negative Sampling}
+    \begin{block}{Procedure}
+        \begin{enumerate}
+            \item Train a model with uniform sampling and Predict on the whole training data
+            \item Store the answer probability for each negative candidate
+            \item Normalize the probabilities within documents to form a distribution
+            \item Sample negative candidates from the probability distribution in training.
+        \end{enumerate}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{fig/hardnegative.png}
+	% \caption{Hard Negative Sampling\label{qs}}
+    \end{figure}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Hard Negative Sampling}
+    \begin{block}{Result}
+        \begin{itemize}
+            \item Result: the performance was improved $6.6\%$ on Public leaderboard and $9.8\%$ on Private leaderboard.
+        \end{itemize}
+        $$\begin{array}{ccc}
+\hline \text { Model } & {\text { Public F1}} & {\text{ Private F1}} \\
+\hline \text { BERT baseline } & 0.516 & 0.482 \\
+\text { BERT with Hard Negative Sampling } & 0.579 & 0.574 \\
+\hline
+\end{array}$$
+    \end{block}
+\end{frame}
+
+
+\begin{frame}{Sifting candidates}
+    \begin{block}{Sifting candidates with BERT base to reduce candidates}
+    \begin{enumerate}
+    \item First perform a full prediction on the validation set using a fast model (BERT Base) to reduce number of candidates.
+    \item Then use larger model to make predictions on the selected candidates.
+    \end{enumerate}
+    \end{block}
+    
+    \begin{block}{Benefits}
+    \begin{enumerate}
+    \item Reduce much predicting time when adding large models.
+    \item More convenient to ensemble other models.
+    \end{enumerate}
+    \end{block}
+    \end{frame}    
+
+\begin{frame}{Sifting candidates}
+\begin{block}{Performances}
+    $$\begin{array}{ccc}
+    \hline \text { Model } & {\text { Public F1}} & {\text{ Private F1}} \\
+    \hline \text { BERT baseline } & 0.516 & 0.482 \\
+    \text { BERT Base (Hard Negative Sampling)} & 0.579 & 0.574 \\
+    \text { BERT${}^{*}$ Sifted $\rightarrow$ ALBERT xlarge } & {0.640} & {0.659} \\
+    \hline
+    \end{array}$$
+    \quad \small{$*$ also trained with hard negative sampling}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Increase Empty Answer Ratio}
+    \begin{block}{Increase Empty Answer Ratio}
+    \begin{enumerate}
+        \item We changed the empty answer ratio so that it is similar to the full dataset.
+        \item We started with a really low empty answer ratio which we got from the bert-joint paper but finetuned according to the Public F1.
+    \end{enumerate}
+    \end{block}
+\end{frame}
+
+\subsection{Experiment Result}
+\begin{frame}{Experiment Result}
+    \begin{block}{Our final Result}
+$$\begin{array}{ccc}
+\hline \text { Model } & {\text { Public F1}} & {\text{ Private F1 }} \\
+\hline \text { Kaggle Best } & 0.713 & 0.717 \\
+\text { BERT Base baseline } & 0.516 & 0.482 \\
+\text { BERT Base (Hard Negative Sampling) } & 0.579 & 0.574 \\
+\text { BERT Sifted{${}^{*}$} $\rightarrow$ ALBERT xlarge } & \textbf{0.640} & \textbf{0.659} \\
+\text { Sifted $\rightarrow$ BERT Base+ALBERT\tiny{(ensemble)} } & 0.665 & 0.666 \\
+\text {Sifted $\rightarrow$ BERT Large+ALBERT\tiny{(ensemble)} } & \textbf{0.738} & \textbf{0.718} \\
+\hline
+\end{array}$$
+\quad \small{$*$ Sifted here stands for first using BERT base to sift candidates}
+    \end{block}% 
+\end{frame}
+
+
+
+\section{Visualization}
+
+\begin{frame}{Visualization}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/paragraph.png}
+	\caption{paragraph\label{qs}}
+    \end{figure}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/question.png}
+	\caption{question and answer\label{qs}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Visualization}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{fig/bertmodel.png}
+	\caption{BERT for natural question answering\label{qs}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Visualization}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/start.png}
+	\caption{start position scores\label{qs}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Visualization}
+    \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{fig/end.png}
+	\caption{end position scores\label{qs}}
+    \end{figure}
+\end{frame}
+
+\section{Reflection}
+\begin{frame}{Reflection}
+    \begin{block}{Reflection}
+        \begin{itemize}
+        \item We have used many useful techniques or tricks to sample and fine-tuning the model to get a nice predicting ability. But we haven't researched much on how to improve the model from its internal principle. 
+        \item We have ensembled Bert and Albert but we can additionally ensemble it with RoBERTa and XLNet. We just didn't have enough time and computing power to make them work correctly.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\section*{References}
+\small
+\begin{frame}{References}
+[1] Tom Kwiatkowski, Jennimaria Palomaki, Olivia Rhinehart, Michael Collins, Ankur Parikh, Chris Alberti, Danielle Epstein, Illia Polosukhin, Matthew Kelcey, Jacob Devlin, Kenton Lee, Kristina N. Toutanova, Llion Jones, Ming-Wei Chang, Andrew Dai, Jakob Uszkoreit, Quoc Le, and Slav Petrov. 2019. Natural questions: a benchmark for question answering research. Transactions ofthe Association ofComputational Linguistics.
+
+[2] Pranav Rajpurkar, Jian Zhang, Konstantin Lopyrev, and Percy Liang. 2016. SQuAD: 100,000+ Questions for Machine Comprehension of Text. In Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing, pages 2383–2392, Austin, Texas. Association for Computational Linguistics.
+
+[3] Pranav Rajpurkar, Robin Jia, and Percy Liang. 2018. Know what you don’t know: Unanswerable questions for squad. In Proceedings
+of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers), pages 784–789. Association for Computational Linguistics.
+
+[4]Tomas Kocisky, Jonathan Schwarz, Phil Blunsom, Chris Dyer, Karl Moritz Hermann, Gabor Melis, and Edward Grefenstette. 2018. The narrativeqa reading comprehension challenge. Transactions of the Association for Computational Linguistics, 6:317–328.
+\end{frame}
+
+\begin{frame}{References}
+[5]Yi Yang, Wen-tau Yih, and Christopher Meek. 2015. Wikiqa: A challenge dataset for opendomain question answering. In Proceedings of the 2015 Conference on Empirical Methods in Natural Language Processing, pages 2013– 2018, Lisbon, Portugal. Association for Computational Linguistics.
+
+[6]Robin Jia and Percy Liang. 2017. Adversarial examples for evaluating reading comprehension systems. In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing, pages 2021–2031, Copenhagen, Denmark. Association for Computational Linguistics.
+
+[7]Lin Pan, Rishav Chakravarti, Anthony Ferritto, Michael Glass, Alfio Gliozzo, Salim Roukos, Radu Florian, and Avirup Sil. 2019. Frustratingly easy natural question answering. arXiv preprint arXiv:1909.05286.
+
+[8]Zhenzhong Lan, Mingda Chen, Sebastian Goodman, Kevin Gimpel, Piyush Sharma, and Radu Soricut. 2019. ALBERT: A lite BERT for self-supervised learning of language representations. arXiv preprint arXiv:1909.11942.
+\end{frame}
+
+\begin{frame}{$Q \And A$}
+    \begin{center}
+        {\Huge $Q \And A$}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        {\Huge\calligra Thanks!}
+    \end{center}
+\end{frame}
+
+
+\end{document}
+
+

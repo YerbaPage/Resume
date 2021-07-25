@@ -1,0 +1,253 @@
+\documentclass{beamer}
+\usepackage{xeCJK,latexsym,amsmath,xcolor,multicol,booktabs,calligra}
+% There are many different themes available for Beamer. A comprehensive
+% list with examples is given here:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+% You can uncomment the themes below if you would like to use a different
+% one:
+% \usetheme{AnnArbor}
+% \usetheme{Antibes}
+% \usetheme{Bergen}
+% \usetheme{Berkeley}
+% \usetheme{Berlin}
+%\usetheme{Boadilla}
+% \usetheme{boxes}
+%\usetheme{CambridgeUS}
+% \usetheme{Copenhagen}
+% \usetheme{Darmstadt}
+%\usetheme{default}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+% \usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+% \usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+% \usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+% \usetheme{Szeged}
+%\usetheme{Warsaw}
+%\usetheme{Montpellier}
+%\usecolortheme{beaver}
+%\usecolortheme{lily}
+
+\title{How I Overfitted}
+% A subtitle is optional and this may be deleted
+
+\author{石雨凌}
+
+\institute{上海财经大学} % (optional, but mostly needed)
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date{2020.12.25}
+
+% \subject{Theoretical Computer Science}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection, currentsubsection]
+  \end{frame}
+}
+
+% Let's get started
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{目录}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+\section{Pre-processing}
+
+\begin{frame}{Pre-processing}
+\begin{block}{观察与预处理}
+\begin{itemize}
+    \item 文本较为随意, 口语化
+    \item 类别具有明显的长尾分布
+    \item 去除一些无效据字段(如"市民反映", "望尽快解决", "此单来自谋某论坛" 等)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\section{Model Selection}
+
+\begin{frame}{Model Selection}
+\begin{block}{Selected models}
+\begin{itemize}
+    \item ERNIE: mask 机制改进(如 knowlege masking), 加入贴吧语料
+    \item RoBERTa-wwm-ext: whole word masking, 更多训练数据和迭代步数
+    \item RoBERTa-large-pair: 对于句子对任务预训练
+\end{itemize}
+
+\end{block}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.4\textwidth]{figure/ernieandbert.jpg}
+        \caption{ERNIE and BERT}
+        \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+\section{Pre Training}
+
+\begin{frame}{Pre Training}
+\begin{block}{相似任务预训练}
+\begin{itemize}
+    \item 借助相似文本分类任务\footnote{L. Pan, et al., 2019, Frustratingly Easy Natural Question Answering}: THUCNews 数据集中20万条新闻标题与新闻类别的分类 (2 epochs)
+    \item Dev set 准确率提升 $0.3\%$ 左右
+\end{itemize}
+
+\end{block}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1\textwidth]{figure/pretrain.png}
+        \caption{模型准备}
+        \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+\section{Speed up}
+
+\begin{frame}{Speed up}
+    \begin{block}{混合精度训练}
+    \begin{itemize}
+        \item 利用 Apex\footnote{Micikevicius, et al., 2018. Mixed Precision Training.}, 梯度更新时采用单精度
+        \item 显存减半, 速度加倍, 精度不减
+    \end{itemize}
+    \end{block}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\textwidth]{figure/mixpre.png}
+        \caption{Mixed precision training iteration for a layer.}
+        \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+\section{Loss Function}
+
+\begin{frame}{Loss Function}
+\begin{block}{Focal loss}
+\begin{itemize}
+    \item 面对样本不平衡问题, 减少易分类样本的损失\footnote{T.-Y. Lin, et al., 2017, Focal Loss for Dense Object Detection}
+    \item Dev set 准确率提升 $0.5\%$ 左右 (LB: 0.798, 0.800)
+\end{itemize}
+
+\end{block}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.5\textwidth]{figure/focal.png}
+        \caption{Loss Function}
+        \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+\section{Auxiliary Task}
+
+\begin{frame}{Auxiliary Task}
+\begin{block}{加入句子对任务}
+\begin{itemize}
+    \item 想法: labels 同样为中文文本, 可以视为 sentences 的摘要, 而 classification task 并未使用这一部分有价值的信息.
+    \item 观察: 对 Dev set 上预测的 probabilities 进行排序, 正确标签 79\% 在第一位, 11 \% 在第二位, 选取至前5位可以覆盖 96\% 的正确标签
+\end{itemize}
+\end{block}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.9\textwidth]{figure/pairdata.png}
+        \caption{Generating pair data}
+        \label{fig:my_label}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Auxiliary Task}
+    \begin{block}{加入句子对任务}
+\begin{itemize}
+    \item 实施: 训练时仍以句子对任务分类情况计算交叉熵, 最终预测时选取句子对任务中 probability 最高者
+    \item 效果: Dev set 准确率提升约 0.5\%
+\end{itemize}
+\end{block}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figure/pairbert.jpg}
+    \caption{BERT for sentence pair tasks}
+    \label{fig:my_label}
+\end{figure}
+
+\end{frame}
+
+\section{Final Submission}
+
+\begin{frame}{Final Submission}
+\begin{block}{Results}
+\begin{table}[htbp]
+    \small
+	\centering
+	\caption{Experiment Results}
+	\begin{tabular}{ccc}
+		\toprule 
+		Model & Public score & Private score \\
+		\midrule 
+		ERNIE\footnote{Original Task: text classification} & 0.7981 & 0.8000 \\
+		ERNIE\footnote{Auxiliary Task: sentence pair classification} & 0.8042 & 0.8010 \\
+		RoBERTa-large-pair${}^{b}$ & 0.8049 & 0.7979 \\
+		RoBERTa-wwm-ext${}^{b}$ & 0.8021 & 0.7970 \\
+		Ensemble${}^{b}$ & 0.8044 & 0.8008 \\
+		\bottomrule 
+	\end{tabular}
+\end{table}
+\end{block}
+\end{frame}
+
+\begin{frame}{想法}
+\begin{itemize}
+    \item Pseudo labels: (full, top8000, top4000) 但是效果并不明显 (top4000 +0.2\%), 最终未使用.
+    \item 回译: 效果也不明显, 可能是句子相对口语化.
+    \item BERT + CNN/RNN: 需要更多epoch, 效果提升 0.1\%, 但分布情况更加分散(top5 95\%), 最终未使用.
+    \item 辅助任务设计数据量大(每个epoch约20min), 不便调参和加入 cross validation, 导致模型泛化性能一般.
+\end{itemize}
+    
+\end{frame}
+
+% \begin{frame}{Final Submission}
+% \begin{block}{加入句子对任务}
+% \begin{itemize}
+%     \item 
+% \end{itemize}
+
+% \end{block}
+%     \begin{figure}[htbp]
+%         \centering
+%         \includegraphics[width=0.35\textwidth]{figure/pairbert.jpg}
+%         \caption{BERT for sentence pair}
+%         \label{fig:my_label}
+%     \end{figure}
+% \end{frame}
+
+\begin{frame}
+    \begin{center}
+        {\Huge\calligra Thanks!}
+    \end{center}
+\end{frame}
+
+% \begin{frame}
+%     \begin{center}
+%         {\Huge Q $\&$ A}
+%     \end{center}
+% \end{frame}
+
+\end{document}
+
+

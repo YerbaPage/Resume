@@ -1,0 +1,496 @@
+\documentclass{beamer}
+\usepackage{latexsym,amsmath,xcolor,multicol,booktabs,calligra,color}
+\usetheme{boxes}
+
+\title{A Brief Introduction to Me and My Research}
+\author{Yuling Shi}
+\institute{SUFE}
+\date{April, 2021}
+
+\subject{Theoretical Computer Science}
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+% Let's get started
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Contents}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+\section{About Me}
+
+\begin{frame}{About Me}
+  \begin{itemize}
+    \item Junior from Shanghai University of Finance and Economics majoring in Applied Mathematics (Elite Program), Major GPA (3.64/4) \\ \
+    \item Boardly interested in deep learning, machine learning and scientific computing. \\ \
+    \item Have done many researches about NLP. One earlier paper accepted about scientific computing.
+  \end{itemize}
+\end{frame}
+
+\section{Research Projects}
+\subsection{Question Answering (Feb 2020 - Jun 2020)}
+
+\begin{frame}{Background}
+  \begin{itemize}
+    \item Leader of the project. Taking DL class with juniors from from Elite Program in Department of Electrical Engineering in my second year.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Data description}
+  \begin{itemize}
+    \item The Natural Questions (NQ) (\textbf{Kwiatkowski et al., 2019}) dataset from Google AI.
+    \item Each example comprised of a google query and a corresponding Wikipedia page.
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.7\textwidth]{figure/aa.png}
+    \caption{Example annotations from the corpus \label{lianxu}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Key Experiments}
+  \begin{itemize}
+    \item Fine-tuning on SQuAD 2.0
+    \item Mixed Precision Training
+    \item Hard Negative Sampling
+    \item Sifting candidates
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fine-tuning on SQuAD $2.0$}
+
+  \begin{itemize}
+    \item SQuAD $2.0$ - $130,000$ crowd sourced question and answer training pairs derived from Wikipedia paragraphs.
+  \end{itemize}
+
+  \begin{block}{Performance in Training}
+    \centering
+    $$\begin{array}{cccc}
+        \hline \text { Model }                & \text { Start\_acc } & \text { End\_acc } & \text { Class\_acc } \\
+        \hline \text { BERT base (Original) } & 59.1                 & 61.5               & 73.9                 \\
+        \text { ALBERT xlarge (Original) }    & 0.12                 & 0.13               & 66.67                \\
+        \text { ALBERT xlarge (Finetuned) }   & 82.54                & 86.37              & 85.75                \\
+        \hline
+      \end{array}$$
+    \quad \tiny{batch size = 3 per GPU, learning rate = 1e-5 for 3 epochs}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Mixed Precision Training}
+
+  \begin{itemize}
+    \item To save memory and speed up - only had 1080Ti GPUs cluster.
+  \end{itemize}
+
+  \begin{block}{Experiment Result}
+    $$\begin{array}{cccc}
+        \hline \text { Precision}  & \text { EM } & \text { F1 } & \text{Speed up${}^{*}$} \\
+        \hline \text { FP32 only } & 84.86        & 88.00        & 1.0                     \\
+        \text { FP16 Only }        & 16.75        & 17.35        & 1.35\text{x}            \\
+        \text { Mixed precision }  & 84.94        & 87.97        & 1.05\text{x}            \\
+        \hline
+      \end{array}$$
+    \quad \tiny{$*$All tested during SQuAD2.0 fine-tuning }%and the speed will have more improvement on GPU with Tensor Cores}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Hard Negative Sampling}
+  \begin{block}{Intuition}
+    \begin{itemize}
+      \item Training questions without any short answer($65\%$) $\rightarrow$ Too many negative Examples
+      \item Uniform sampling $\rightarrow$ most of the negative candidates are \textbf{"too easy"}
+      \item Hard negative sampling $\rightarrow$ increase the difficulty of training % the candidate-level
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Hard Negative Sampling}
+  \begin{block}{Procedure}
+    \begin{enumerate}
+      \item Train a model with uniform sampling and predict on the whole training data
+      \item Store the answer probability for each negative candidate
+      \item Normalize the probabilities within documents to form a distribution
+      \item Sample negative candidates from the probability distribution in training.
+    \end{enumerate}
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.6\textwidth]{figure/hardnegative.png}
+      % \caption{Hard Negative Sampling\label{qs}}
+    \end{figure}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Hard Negative Sampling}
+  \begin{block}{Result}
+
+    \begin{itemize}
+      \item Result: the performance was improved $6.6\%$ on Public leaderboard and $9.8\%$ on Private leaderboard.
+    \end{itemize}
+
+    $$\begin{array}{ccc}
+        \hline \text { Model }                     & {\text { Public F1}} & {\text{ Private F1}} \\
+        \hline \text { BERT baseline }             & 0.516                & 0.482                \\
+        \text { BERT with Hard Negative Sampling } & 0.579                & 0.574                \\
+        \hline
+      \end{array}$$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Sifting candidates}
+  \begin{block}{Sifting candidates with BERT base to reduce candidates}
+    \begin{enumerate}
+      \item First perform a full prediction on the validation set using a fast model (BERT Base) to reduce number of candidates.
+      \item Then use larger model to make predictions on the selected candidates.
+    \end{enumerate}
+  \end{block}
+
+  \begin{block}{Benefits}
+    \begin{enumerate}
+      \item Reduce much predicting time when adding large models.
+      \item More convenient to ensemble other models.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Sifting candidates}
+  \begin{block}{Performances}
+    $$\begin{array}{ccc}
+        \hline \text { Model }                                    & {\text { Public F1}} & {\text{ Private F1}} \\
+        \hline \text { BERT baseline }                            & 0.516                & 0.482                \\
+        \text { BERT Base (Hard Negative Sampling)}               & 0.579                & 0.574                \\
+        \text { BERT${}^{*}$ Sifted $\rightarrow$ ALBERT xlarge } & {0.640}              & {0.659}              \\
+        \hline
+      \end{array}$$
+    \quad \small{$*$ also trained with hard negative sampling}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Final Result}
+  $$\begin{array}{ccc}
+      \hline \text { Model }                                           & {\text { Public F1}} & {\text{ Private F1 }} \\
+      \hline \text { Kaggle Best }                                     & 0.713                & 0.717                 \\
+      \text { BERT Base baseline }                                     & 0.516                & 0.482                 \\
+      \text { BERT Base (Hard Negative Sampling) }                     & 0.579                & 0.574                 \\
+      \text { BERT Sifted{${}^{*}$} $\rightarrow$ ALBERT xlarge }      & \textbf{0.640}       & \textbf{0.659}        \\
+      \text { Sifted $\rightarrow$ BERT Base+ALBERT\tiny{(ensemble)} } & 0.665                & 0.666                 \\
+      \text {Sifted $\rightarrow$ BERT Large+ALBERT\tiny{(ensemble)} } & \textbf{0.738}       & \textbf{0.718}        \\
+      \hline
+    \end{array}$$
+  \quad \small{$*$ Sifted here stands for first using BERT base to sift candidates}
+\end{frame}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Learned to search and read latest paper regularly and looked for many useful techniques.\\ \
+    \item Comfortable with Linux environment and commands, and also implementation of DL models. \\ \
+    \item Collaborated with group to discuss and do experiments together. Also asked for teachers' advice regularly.
+  \end{itemize}
+\end{frame}
+
+\subsection{Kaggle Sentence Classification (Nov 2020 - Dec 2020)}
+\begin{frame}{Overview}
+  \begin{itemize}
+    \item Data: complaints from citizens. The task is to predict label (200 classes in total).
+    \item Pre-processed the dateset, pre-trained models on similar dataset THUCNews with mixed precision training.
+    \item Focal loss to track difficult and rare class examples.
+    \item Designed a auxiliary sentence pair task.
+    \item Also tried adversarial training, data augmentation, adding other layers after BERT, using RoBERTa-wwm, ERNIE, etc.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Focal Loss}
+  \begin{itemize}
+    \item The 200 labels are long-tailed distributed.
+    \item Scaled losses according to how difficult the example is to predict.
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figure/focal.png}
+    \caption{Different Loss Functions}
+    \label{fig:focal_label}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Auxiliary Task}
+  \begin{itemize}
+    \item The original classification task failed to utilize information in the labels.
+    \item Sort predicted labels by probabilities, 79\% of the true label are at the first place, 11\% at the second, 96\% of them are within top 5 predictions. \\ \
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figure/pairdata.png}
+    \caption{Generating pair data}
+    \label{fig:my_label}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Final Submission}
+  \begin{itemize}
+    \item Highest public score in class (led by 0.4\%) but turned out to be overfitted. (why? lack of cross validation?)
+  \end{itemize}
+  \begin{table}[htbp]
+    \centering
+    \caption{Selected Experiment Results}
+    \begin{tabular}{ccc}
+      \toprule
+      Model                                                        & Public score & Private score \\
+      \midrule
+      ERNIE\footnote{Original Task: text classification}           & 0.7981       & 0.8000        \\
+      ERNIE\footnote{Focal Loss}                                   & 0.7995       & 0.8030        \\
+      ERNIE\footnote{Auxiliary Task: sentence pair classification} & 0.8049       & 0.8010        \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Explored and implemented more useful techniques myself. \\ \
+    \item Faced with a more unpredictable project, designed an auxiliary task which performed "well". \\ \
+    \item Experimented more failed techniques and analyzed possible reasons.
+  \end{itemize}
+\end{frame}
+
+\subsection{Finite Element Method (Jul 2020 - Feb 2021)}
+
+\begin{frame}{Biref Introduction}
+  Finite element space:
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.7\textwidth]{figure/basis.png}
+    \caption{Linear basis in 1D}
+    \label{fig:}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}{Main Problem}
+  Equation:
+  $$
+    \begin{cases}
+      \varepsilon^2\Delta^{2}u-\Delta u=f \quad\;\; \textrm{in}~\Omega, \\
+      u=\partial_nu=0 \quad\quad\quad \textrm{on}~\partial\Omega,
+    \end{cases}
+  $$
+
+  \begin{itemize}
+    \item Original variational form
+          $$
+            \varepsilon^2 (\nabla_h^{2}u_{h0}, \nabla_h^{2}v_h)+(\nabla_h u_{h0}, \nabla_h v_h)=(f, P_hv_h) \quad \forall~v_h \in V_{h0}.
+          $$
+    \item Original ways to solve:
+          \begin{itemize}
+            \item Conforming elements: computational expensive \\ \
+            \item Non-conforming elements: isn't convergent
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Biref Description}
+  Our work:
+  \begin{itemize}
+    \item Modified the right hand side via projection:
+    $$
+    \begin{aligned}
+    \left(\nabla w_{h}, \nabla \chi_{h}\right) &=\left(f, \chi_{h}\right) & & \forall \chi_{h} \in W_{h} \\
+    \varepsilon^{2} a_{h}\left(u_{h 0}, v_{h}\right)+b_{h}\left(u_{h 0}, v_{h}\right) &=\left(\nabla w_{h}, \nabla_{h} v_{h}\right) & & \forall v_{h} \in V_{h 0}
+    \end{aligned}
+    $$
+    \item Decoupled the left hand side into four simple equations: \\ \
+          {\footnotesize
+          $$
+            \begin{aligned}
+              \left(\operatorname{curl}_{h} z_{h}, \operatorname{curl}_{h} v_{h}\right)                                                                                & =\left(\nabla w_{h}, \nabla_{h} v_{h}\right)             &  & \forall v_{h} \in V_{h 0}          \\
+              \left(\phi_{h}, \psi_{h}\right)+\varepsilon^{2}\left(\nabla_{h} \phi_{h}, \nabla_{h} \psi_{h}\right)+\left(\operatorname{div}_{h} \psi_{h}, p_{h}\right) & =\left(\operatorname{curl}_{h} z_{h}, \psi_{h}\right)    &  & \forall \psi_{h} \in V_{h 0}^{C R} \\
+              \left(\operatorname{div}_{h} \phi_{h}, q_{h}\right)                                                                                                      & =0                                                       &  & \forall q_{h} \in \mathcal{Q}_{h}  \\
+              \left(\operatorname{curl}_{h} u_{h 0}, \operatorname{curl}_{h} \chi_{h}\right)                                                                           & =\left(\phi_{h}, \operatorname{curl}_{h} \chi_{h}\right) &  & \forall \chi_{h} \in V_{h 0}
+            \end{aligned}
+          $$
+          }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Biref Description}
+  \begin{itemize}
+    \item Can be solved efficiently with the simplest Morley element.
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.8\textwidth]{figure/itersteps.jpg}
+    \caption{Robust iteration steps when solving}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Final paper accepted by \textit{Journal of Scientific Computing} \\ \
+    \item Found a suitable open source package myself and studied many bottom-level codes.\\ \
+    \item Fixed many bugs in developing experiments by discussing. Reported bug for the package and contributed codes to develop it.
+  \end{itemize}
+\end{frame}
+
+\subsection{Interpreting NLP Model (Jan 2021 - Present)}
+
+\begin{frame}{Background}
+  Existing methods
+  \begin{itemize}
+    \item Gradient based methods: gradient, dot product with embeddings, integrated gradient ... \\ \
+    \item Perturbation based methods: input reduction, adversarial perturbations ... \\ \
+  \end{itemize}
+  Trying to explain what the model is learning during the training process.
+
+    {\tiny
+      $$
+        \begin{aligned}
+          Loss\left(x_{1}, \ldots, x_{d}\right)= & \sum_{n_{1}=0}^{\infty} \cdots \sum_{n_{d}=0}^{\infty} \frac{\left(x_{1}-a_{1}\right)^{n_{1}} \cdots\left(x_{d}-a_{d}\right)^{n_{d}}}{n_{1} ! \cdots n_{d} !}\left(\frac{\partial^{n_{1}+\cdots+n_{d}} f}{\partial x_{1}^{n_{1}} \cdots \partial x_{d}^{n_{d}}}\right)\left(a_{1}, \ldots, a_{d}\right)                        \\
+          =                                   & f\left(a_{1}, \ldots, a_{d}\right)+\sum_{j=1}^{d} \frac{\partial f\left(a_{1}, \ldots, a_{d}\right)}{\partial x_{j}}\left(x_{j}-a_{j}\right)+\frac{1}{2 !} \sum_{j=1}^{d} \sum_{k=1}^{d} \frac{\partial^{2} f\left(a_{1}, \ldots, a_{d}\right)}{\partial x_{j} \partial x_{k}}\left(x_{j}-a_{j}\right)\left(x_{k}-a_{k}\right) \\
+                                              & +\frac{1}{3 !} \sum_{j=1}^{d} \sum_{k=1}^{d} \sum_{l=1}^{d} \frac{\partial^{3} f\left(a_{1}, \ldots, a_{d}\right)}{\partial x_{j} \partial x_{k} \partial x_{l}}\left(x_{j}-a_{j}\right)\left(x_{k}-a_{k}\right)\left(x_{l}-a_{l}\right)+\cdots
+        \end{aligned}
+      $$}
+\end{frame}
+
+\begin{frame}{Dataset}
+  \begin{itemize}
+    \item e-SNLI dataset: essential words are highlighted by annotators
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.9\textwidth]{figure/esnli.png}
+    \caption{Examples from e-SNLI}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item Loss durning training BERT-Base:
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figure/overfit_loss.png}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item Gradients of annotated "essential words" durning training BERT-Base:
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figure/overfit_grad.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item Ratio: $\frac {|\text{Gradients of annotated}|}{|\text{Gradients of all}|}$ durning training BERT-Base:
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figure/overfit_ratio.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item Model learning relations between "essential" words?
+    \item $\frac {\partial Loss}{\partial E_i E_j}$ durning training BERT-Base:
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.5\textwidth]{figure/cross_loss.png}\includegraphics[width=.5\textwidth]{figure/cross_ratio.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item What relations are captured? \\ \
+    \item Sentences (label: entailment): \begin{enumerate}
+            \item Two young boys of opposing teams play football, while wearing full protection uniforms and helmets.
+            \item Boys play football. \\ \
+          \end{enumerate}
+    \item 'essential words': $$\text{['boys', 'opposing', 'teams', 'play', 'boys', 'play', 'football']}$$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item Sentences: \begin{enumerate}
+            \item Two young \textcolor{red}{boys of opposing teams play} football, while wearing full protection uniforms and helmets.
+            \item \textcolor{red}{Boys play football}.
+          \end{enumerate}
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.6\textwidth]{figure/batch0.png}
+    \caption{At the beginning of training}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item Sentences: \begin{enumerate}
+            \item Two young \textcolor{red}{boys of opposing teams play} football, while wearing full protection uniforms and helmets.
+            \item \textcolor{red}{Boys play football}.
+          \end{enumerate}
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.6\textwidth]{figure/batch1.png}
+    \caption{Trained for 1/2 epoch}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Experiments}
+  \begin{itemize}
+    \item Sentences: \begin{enumerate}
+            \item Two young \textcolor{red}{boys of opposing teams play} football, while wearing full protection uniforms and helmets.
+            \item \textcolor{red}{Boys play football}.
+          \end{enumerate}
+  \end{itemize}
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.6\textwidth]{figure/batch2.png}
+    \caption{Trained for 1 epoch}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Future Work}
+  \begin{itemize}
+    \item Search for other dataset to simplify the problem. \\ \
+    \item Techniques to reduce computational cost (randomized?). \\ \
+    \item Design other experiments to figure out what is decreasing?
+  \end{itemize}
+\end{frame}
+
+
+\section{Summary}
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Comfortable with math and can implement experiments fast. \\ \
+    \item Highly motivated and always passionate to search for and think of more techniques. \\ \
+    \item Seeking for further guidance :) .
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    {\Huge\calligra Thanks for your attention!}
+  \end{center}
+\end{frame}
+
+\end{document}
+
+
